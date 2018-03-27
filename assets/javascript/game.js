@@ -21,22 +21,37 @@ var trivObject3 = {
 };
 
 var triviaArray = [trivObject1, trivObject2, trivObject3];
-
-var trivQuest = trivObject1.question;
-var trivChoices = trivObject1.choices;
+var triviaQuestionsArray = [trivObject1.question, trivObject2.question, trivObject3.question];
+var triviaChoicesArray = [trivObject1.choices, trivObject2.choices, trivObject3.choices];
+var triviaAnswersArray = [trivObject1.answer, trivObject2.answer, trivObject3.answer];
 
 function getQuestion() {
-    $('#question').append(trivQuest);
-    for (var j = 0; j < trivChoices.length; j++) {
-        var choice = $('<span>');
-        choice.attr('id','test');
-        choice.append(trivChoices[j]);
-        $('#choices').append(choice);
-        // $('#answers').append(trivChoices[j]); THIS WORKS
-        // console.log(trivChoices[j]);  THIS WORKS
-        console.log(trivChoices[j]);
+    for (var i = 0; i < triviaArray.length; i++) {
+        var question = $('<span>')
+        $('#question').append(question);
+        question.append(triviaArray[i].question);
+        question.append('<br>');
+        console.log(triviaArray[i].question);
+
+        for (var j = 0; j < triviaArray.length; j++) {
+            var choice = $('<span>');
+            choice.attr('data-choice',triviaArray[j].choices[0]);
+            choice.append(triviaChoicesArray[j]);
+            $('#question').append(choice);
+            choice.append('<br>');
+            console.log(choice);
+        };
+        $('[data-choice]').click(function() {
+            var myGuess = $(this).attr("data-choice");
+            console.log(myGuess);
+            if (myGuess == trivAnswer) {
+                alert("Correct");
+            }
+            else if (myGuess!== trivAnswer) {
+                alert("Wrong");
+            }
+        });
     }
-    
 };
 
 $("#startGame").click(function() {
@@ -49,7 +64,7 @@ $("#startGame").click(function() {
 var intervalId;
 var clockRunning = false;
 var timer = {
-    time: 5,
+    time: 60,
     start: function() {
         if (!clockRunning) {
             intervalId = setInterval(timer.count, 1000);
@@ -77,7 +92,7 @@ var timer = {
         return minutes + ":" + seconds;
     },
     theEnd: function() {
-        setTimeout(gameOver, 5000);
+        setTimeout(gameOver, 60000);
         function gameOver() {
             console.log('game OVER');
             clearInterval(intervalId);
